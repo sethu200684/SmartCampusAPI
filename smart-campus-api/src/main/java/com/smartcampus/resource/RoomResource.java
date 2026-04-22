@@ -10,6 +10,9 @@ import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 /**
  * Part 2 - Room Management
@@ -22,6 +25,9 @@ public class RoomResource {
 
     private final DataStore store = DataStore.getInstance();
 
+    @Context
+    private UriInfo uriInfo;
+    
     /**
      * GET /api/v1/rooms
      * Returns all rooms.
@@ -49,7 +55,8 @@ public class RoomResource {
                     .build();
         }
         store.getRooms().put(room.getId(), room);
-        return Response.status(Response.Status.CREATED).entity(room).build();
+        URI location = uriInfo.getAbsolutePathBuilder().path(room.getId()).build();
+return Response.created(location).entity(room).build();
     }
 
     /**
